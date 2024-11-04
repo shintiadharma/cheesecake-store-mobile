@@ -29,7 +29,7 @@ Perbedaan antara `const` dan `final`:
 * `final`: Digunakan untuk variabel yang nilainya ditetapkan sekali dan tidak dapat diubah setelahnya. Nilainya dapat ditentukan saat runtime, bukan hanya pada waktu kompilasi.
 
 ## 5. Jelaskan bagaimana cara kamu mengimplementasikan checklist-checklist di atas.
-1. Saya membuat proyek flutter bernama josh_mobile, karena saya memilih untuk menggunakan vscode, dan saya sudah menginstall semua extension yang dibutuhkan, saya membuat proyek flutter ini dengan menekan `command + shift + p`.
+1. Saya membuat proyek flutter bernama cheesecakestore_mobile, karena saya memilih untuk menggunakan vscode, dan saya sudah menginstall semua extension yang dibutuhkan, saya membuat proyek flutter ini dengan menekan `command + shift + p`.
 2. Lalu saya merapikan kode dengan memindahkan beberapa potongan kode ke dalam `menu.dart` yang saya buat.
 3. Untuk membuat tiga tombol sederhana dengan ikon dan teks untuk: **Lihat Daftar Produk**, **Tambah Produk**, dan **Logout**, saya mengimplementasikan menggunakan kelas `ItemHomepage` yang mendefinisikan nama, ikon, dan warna tombol. Objek-objek ini dimasukkan ke dalam list `items`:
 
