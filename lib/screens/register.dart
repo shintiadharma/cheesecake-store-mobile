@@ -29,7 +29,6 @@ class _RegisterPageState extends State<RegisterPage> {
     String password1 = _passwordController.text;
     String password2 = _confirmPasswordController.text;
 
-    // Validasi input
     if (username.isEmpty || password1.isEmpty || password2.isEmpty) {
       _showSnackBar(context, 'Please fill in all fields.');
       return;
@@ -43,7 +42,6 @@ class _RegisterPageState extends State<RegisterPage> {
       _isLoading = true;
     });
 
-    // Melakukan request register ke server Django
     final response = await request.postJson(
       "http://127.0.0.1:8000/auth/register/",
       jsonEncode({
@@ -65,7 +63,6 @@ class _RegisterPageState extends State<RegisterPage> {
           MaterialPageRoute(builder: (context) => const LoginPage()),
         );
       } else {
-        // Menampilkan pesan error dari server jika pendaftaran gagal
         String errorMessage = response['message'] ?? 'Failed to register!';
         _showSnackBar(context, errorMessage);
       }
@@ -76,9 +73,10 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register'),
+        title: const Text('Register', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.pink,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -88,81 +86,86 @@ class _RegisterPageState extends State<RegisterPage> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Card(
-            elevation: 8,
+            elevation: 10,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   const Text(
                     'Register',
                     style: TextStyle(
-                      fontSize: 24.0,
+                      fontSize: 28.0,
                       fontWeight: FontWeight.bold,
+                      color: Colors.pink,
                     ),
                   ),
                   const SizedBox(height: 30.0),
+
+                  // Username Field with Icon
                   TextFormField(
                     controller: _usernameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person, color: Colors.pink),
                       labelText: 'Username',
                       hintText: 'Enter your username',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 8.0,
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
                     ),
                   ),
-                  const SizedBox(height: 12.0),
+                  const SizedBox(height: 16.0),
+
+                  // Password Field with Icon
                   TextFormField(
                     controller: _passwordController,
                     obscureText: true,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.lock, color: Colors.pink),
                       labelText: 'Password',
                       hintText: 'Enter your password',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 8.0,
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
                     ),
                   ),
-                  const SizedBox(height: 12.0),
+                  const SizedBox(height: 16.0),
+
+                  // Confirm Password Field with Icon
                   TextFormField(
                     controller: _confirmPasswordController,
                     obscureText: true,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.lock_outline, color: Colors.pink),
                       labelText: 'Confirm Password',
                       hintText: 'Confirm your password',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 8.0,
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
                     ),
                   ),
                   const SizedBox(height: 24.0),
+
+                  // Register Button
                   ElevatedButton(
                     onPressed: _isLoading ? null : () => _registerUser(context),
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.pink,
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50),
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
                     ),
                     child: _isLoading
-                        ? const CircularProgressIndicator()
-                        : const Text('Register'),
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text('Register', style: TextStyle(fontSize: 18.0)),
                   ),
                 ],
               ),

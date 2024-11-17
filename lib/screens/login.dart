@@ -23,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
+        backgroundColor: Colors.pink,
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -30,49 +31,51 @@ class _LoginPageState extends State<LoginPage> {
           child: Card(
             elevation: 8,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
                     'Login',
-                    style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold, color: Colors.pink),
                   ),
                   const SizedBox(height: 30.0),
+                  
+                  // Username Field with Icon
                   TextField(
                     controller: _usernameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person, color: Colors.pink),
                       labelText: 'Username',
                       hintText: 'Enter your username',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 8.0,
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
                     ),
                   ),
-                  const SizedBox(height: 12.0),
+                  const SizedBox(height: 16.0),
+                  
+                  // Password Field with Icon
                   TextField(
                     controller: _passwordController,
                     obscureText: true,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.lock, color: Colors.pink),
                       labelText: 'Password',
                       hintText: 'Enter your password',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 8.0,
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
                     ),
                   ),
                   const SizedBox(height: 24.0),
+
+                  // Login Button
                   ElevatedButton(
                     onPressed: _isLoading ? null : () async {
                       setState(() {
@@ -85,10 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                       // Cek kredensial
                       final response = await request.login(
                         "http://127.0.0.1:8000/auth/login/",
-                        {
-                          'username': username,
-                          'password': password,
-                        },
+                        {'username': username, 'password': password},
                       );
 
                       setState(() {
@@ -99,17 +99,12 @@ class _LoginPageState extends State<LoginPage> {
                         String message = response['message'];
                         String uname = response['username'];
                         if (mounted) {
-                          // Navigasi ke MyHomePage setelah login berhasil
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => MyHomePage(),
-                            ),
+                            MaterialPageRoute(builder: (context) => MyHomePage()),
                           );
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("$message Selamat datang, $uname."),
-                            ),
+                            SnackBar(content: Text("$message Selamat datang, $uname.")),
                           );
                         }
                       } else {
@@ -121,9 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                               content: Text(response['message'] ?? 'Login gagal.'),
                               actions: [
                                 TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
+                                  onPressed: () => Navigator.pop(context),
                                   child: const Text('OK'),
                                 ),
                               ],
@@ -133,30 +126,36 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.pink,
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50),
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
                     ),
                     child: _isLoading
-                        ? const CircularProgressIndicator()
-                        : const Text('Login'),
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text(
+                            'Login',
+                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                          ),
                   ),
                   const SizedBox(height: 36.0),
+
+                  // Register Link
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const RegisterPage(),
-                        ),
+                        MaterialPageRoute(builder: (context) => const RegisterPage()),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'Don\'t have an account? Register',
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Colors.pink,
                         fontSize: 16.0,
+                        decoration: TextDecoration.underline,
                       ),
                     ),
                   ),

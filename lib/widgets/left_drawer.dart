@@ -64,7 +64,7 @@ class LeftDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.cake),
+            leading: const Icon(Icons.shopping_bag),
             title: const Text('Daftar Produk'),
             onTap: () {
                 // Route menu ke halaman mood
