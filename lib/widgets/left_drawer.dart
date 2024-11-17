@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cheesecakestore_mobile/screens/menu.dart';
 import 'package:cheesecakestore_mobile/screens/productentry_form.dart';
+import 'package:cheesecakestore_mobile/screens/list_productentry.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -60,6 +61,17 @@ class LeftDrawer extends StatelessWidget {
               MaterialPageRoute(
                   builder: (context) => const ProductEntryFormPage(),
               ));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.cake),
+            title: const Text('Daftar Produk'),
+            onTap: () {
+                // Route menu ke halaman mood
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ProductListPage()),
+                );
             },
           ),
         ],

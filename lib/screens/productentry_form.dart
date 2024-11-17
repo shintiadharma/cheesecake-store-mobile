@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cheesecakestore_mobile/widgets/left_drawer.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'dart:convert';
 
 class ProductEntryFormPage extends StatefulWidget {
   const ProductEntryFormPage({super.key});
@@ -15,16 +18,17 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
   String _size = "";
   int _price = 0;
   String _description = "";
-  String _note = "";
+  String _notes = "";
 
   @override
   Widget build(BuildContext context) {
+    // Mendeklarasikan request untuk autentikasi
+    final request = context.watch<CookieRequest>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text(
-            'Tambah Produk',
-          ),
+          child: Text('Tambah Produk'),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
@@ -36,6 +40,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Form Input Name
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -46,19 +51,12 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _name = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Nama Produk tidak boleh kosong!";
-                    }
-                    return null;
-                  },
+                  onChanged: (value) => setState(() => _name = value),
+                  validator: (value) => value!.isEmpty ? "Nama Produk tidak boleh kosong!" : null,
                 ),
               ),
+
+              // Form Input Size
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -69,19 +67,12 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _size = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Size tidak boleh kosong!";
-                    }
-                    return null;
-                  },
+                  onChanged: (value) => setState(() => _size = value),
+                  validator: (value) => value!.isEmpty ? "Size tidak boleh kosong!" : null,
                 ),
               ),
+
+              // Form Input Price
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -93,22 +84,16 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                     ),
                   ),
                   keyboardType: TextInputType.number,
-                  onChanged: (String? value) {
-                    setState(() {
-                      _price = int.tryParse(value!) ?? 0;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Price tidak boleh kosong!";
-                    }
-                    if (int.tryParse(value) == null) {
-                      return "Price must be a number!";
-                    }
+                  onChanged: (value) => setState(() => _price = int.tryParse(value) ?? 0),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) return "Price tidak boleh kosong!";
+                    if (int.tryParse(value) == null) return "Price must be a number!";
                     return null;
                   },
                 ),
               ),
+
+              // Form Input Description
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -119,82 +104,72 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _description = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Description tidak boleh kosong!";
-                    }
-                    return null;
-                  },
+                  onChanged: (value) => setState(() => _description = value),
+                  validator: (value) => value!.isEmpty ? "Description tidak boleh kosong!" : null,
                 ),
               ),
+
+              // Form Input Notes
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    hintText: "Note",
-                    labelText: "Note",
+                    hintText: "Notes",
+                    labelText: "Notes",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _note = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Note tidak boleh kosong!";
-                    }
-                    return null;
-                  },
+                  onChanged: (value) => setState(() => _notes = value),
+                  validator: (value) => value!.isEmpty ? "Notes tidak boleh kosong!" : null,
                 ),
               ),
+
+              // Tombol Submit
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).colorScheme.primary),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Product Added Successfully!'),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Name: $_name'),
-                                    Text('Size: $_size'),
-                                    Text('Price: $_price'),
-                                    Text('Description: $_description'),
-                                    Text('Note: $_note'),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    _formKey.currentState!.reset();
-                                  },
-                                ),
-                              ],
+                        try {
+                          print("Mengirim data produk...");
+                          Map<String, dynamic> data = {
+                            'name': _name,
+                            'size': _size,
+                            'price': _price.toString(),
+                            'description': _description,
+                            'notes': _notes,
+                          };
+                          print("Data yang dikirim: $data");
+
+                          final response = await request.postJson(
+                            "http://127.0.0.1:8000/authentication/create-product/",
+                            data,
+                          );
+
+                          print("Response dari server: $response");
+
+                          if (response['status'] == 'success') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Produk berhasil disimpan!")),
                             );
-                          },
-                        );
+                            Navigator.pushReplacementNamed(context, '/home');
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Gagal menyimpan produk")),
+                            );
+                          }
+                        } catch (e) {
+                          print("Error: $e");
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Terdapat kesalahan, coba lagi!")),
+                          );
+                        }
                       }
                     },
                     child: const Text(

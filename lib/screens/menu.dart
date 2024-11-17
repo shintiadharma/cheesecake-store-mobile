@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cheesecakestore_mobile/widgets/left_drawer.dart';
-import 'package:cheesecakestore_mobile/widgets/product_card.dart';
 
 class MyHomePage extends StatelessWidget {
   final String npm = '2306245655';
@@ -10,9 +9,9 @@ class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
 
   final List<ItemHomepage> items = [
-    ItemHomepage("Lihat Daftar Produk", Icons.shopping_cart, Colors.pink[300]!, "Kamu telah menekan tombol Lihat Daftar Produk"),
-    ItemHomepage("Tambah Produk", Icons.add, Colors.pink[200]!, "Kamu telah menekan tombol Tambah Produk"),
-    ItemHomepage("Logout", Icons.logout, Colors.pink[100]!, "Kamu telah menekan tombol Logout"),
+    ItemHomepage("Lihat Daftar Produk", Icons.shopping_cart, Colors.pink[300]!, '/product-list'),
+    ItemHomepage("Tambah Produk", Icons.add, Colors.pink[200]!, '/add-item'),
+    ItemHomepage("Logout", Icons.logout, Colors.pink[100]!, '/'),
   ];
 
   @override
@@ -21,59 +20,53 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Cheesecake Store',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.pink, // Sesuaikan warna AppBar
+        backgroundColor: Colors.pink,
       ),
       drawer: const LeftDrawer(),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(10.0), // Set padding dari halaman
+            padding: const EdgeInsets.all(20.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center, // Posisikan konten di tengah secara vertikal
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                // Info cards for NPM, Name, and Class
+                // Membuat NPM, Name, dan Class dalam satu baris
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    InfoCard(title: 'NPM', content: npm),
-                    InfoCard(title: 'Nama', content: name),
-                    InfoCard(title: 'Kelas', content: className),
+                    Expanded(child: infoCard('NPM', npm)),
+                    const SizedBox(width: 10),
+                    Expanded(child: infoCard('Name', name)),
+                    const SizedBox(width: 10),
+                    Expanded(child: infoCard('Class', className)),
                   ],
                 ),
-                const SizedBox(height: 16.0), // Spacing between info cards and welcome text
+                const SizedBox(height: 40),
 
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  child: Text(
-                    'Welcome to Cheesecake Store!', // Tambahkan teks selamat datang
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey.shade900,
-                    ),
+                // Teks Selamat Datang
+                const Text(
+                  'Welcome to Cheesecake Store!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
                   ),
                 ),
+                const SizedBox(height: 40),
 
-                const SizedBox(height: 16.0), // Spacing between welcome text and grid
-
-                // Grid layout
+                // Grid Menu
                 Center(
                   child: GridView.count(
                     primary: false,
-                    padding: const EdgeInsets.all(10), // Kurangi padding
-                    crossAxisSpacing: 5, // Kurangi jarak horizontal antar card
-                    mainAxisSpacing: 5, // Kurangi jarak vertikal antar card
-                    crossAxisCount: 3, // Jumlah kolom dalam grid
+                    padding: const EdgeInsets.all(10),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 3,
                     shrinkWrap: true,
-                    children: items.map((ItemHomepage item) {
-                      return ItemCard(item); // Menggunakan ItemCard untuk menampilkan item
-                    }).toList(),
+                    children: items.map((item) => menuCard(context, item)).toList(),
                   ),
                 ),
               ],
@@ -83,4 +76,91 @@ class MyHomePage extends StatelessWidget {
       ),
     );
   }
+
+  // Fungsi untuk membuat Card Info yang lebih menarik
+  Widget infoCard(String title, String content) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            spreadRadius: 2,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            content,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Fungsi untuk membuat Card Menu
+  Widget menuCard(BuildContext context, ItemHomepage item) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, item.route);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: item.color,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(item.icon, color: Colors.white, size: 32),
+            const SizedBox(height: 10),
+            Text(
+              item.title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ItemHomepage {
+  final String title;
+  final IconData icon;
+  final Color color;
+  final String route;
+
+  ItemHomepage(this.title, this.icon, this.color, this.route);
 }
