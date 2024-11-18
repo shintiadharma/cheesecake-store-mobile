@@ -91,15 +91,14 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                               'description': _description,
                               'notes': _notes,
                             };
-
+                            
                             try {
                               final response = await request.postJson(
-                                "http://127.0.0.1:8000/authentication/create-product/",
+                                "http://127.0.0.1:8000/create-flutter/",
                                 jsonEncode(data),
                               );
 
-                              if (response.containsKey('status') &&
-                                  response['status'] == 'success') {
+                              if (response.containsKey('status') && response['status'] == 'success') {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text("Produk berhasil disimpan!")),
                                 );
